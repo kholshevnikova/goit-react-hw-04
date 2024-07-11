@@ -5,8 +5,7 @@ import { ColorRing } from "react-loader-spinner";
 import { getPhotos } from "../images-api";
 import { Toaster } from "react-hot-toast";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
-import Modal from "react-modal";
-import ImageModal from "../ImageModal/ImageModal";
+import { ImageModal } from "../ImageModal/ImageModal";
 
 export default function App() {
   const [images, setImages] = useState([]);
@@ -14,19 +13,10 @@ export default function App() {
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [item, setItem] = useState("");
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [totalImages, setTotalImages] = useState(0);
-
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-    },
-  };
+  const [urlModal, setUrlModal] = useState("");
+  const [altModal, setAltModal] = useState("");
 
   const handleSearch = (topic) => {
     setImages([]);
@@ -58,17 +48,17 @@ export default function App() {
     getImages();
   }, [page, item]);
 
-  function openModal() {
+  const openModal = (url, alt) => {
     setIsOpen(true);
-  }
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    // subtitle.style.color = "#f00";
-  }
+    setAltModal(alt);
+    setUrlModal(url);
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+    setAltModal("");
+    setUrlModal("");
+  };
 
   return (
     <div>
@@ -88,16 +78,12 @@ export default function App() {
       {images.length > 0 && images.length < totalImages && (
         <LoadMoreBtn onClick={handleLoadMore}>Load More</LoadMoreBtn>
       )}
-
-      <Modal
-        isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <ImageModal onRequestClose={closeModal} />
-      </Modal>
+      <ImageModal
+        modalIsOpen={isOpen}
+        closeModal={closeModal}
+        url={urlModal}
+        alt={altModal}
+      />
     </div>
   );
 }

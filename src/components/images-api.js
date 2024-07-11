@@ -4,7 +4,7 @@ const API_KEY = 'HN_AEfRTGwx6jENK4SlKTZK4zjzhIfTTmdrNwJirh9Y';
 axios.defaults.baseURL = 'https://api.unsplash.com';
 axios.defaults.params = {
   orientation: 'landscape',
-  per_page: 15,
+  per_page: 16,
 };
 
 export const getPhotos = async (topic, currentPage) => {
